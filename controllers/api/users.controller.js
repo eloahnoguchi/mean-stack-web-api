@@ -10,6 +10,7 @@ router.get('/:_id', getCurrentUser);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 
+
 module.exports = router;
 
 function authenticateUser(req, res) {
