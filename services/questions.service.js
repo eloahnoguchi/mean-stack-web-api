@@ -18,14 +18,14 @@ module.exports = service;
 function get() {
     var deferred = Q.defer();
 
-    db.questions.find().toArray(function (err, items) {
+    db.questions.find({}).toArray(function (err, items) {
         if (err) {
             console.log(err);
             deferred.reject(err.name + ': ' + err.message);
         }
         console.log(items);
             // user not found
-            deferred.resolve();
+            deferred.resolve(items);
         
     });
 
