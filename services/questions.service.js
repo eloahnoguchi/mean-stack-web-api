@@ -1,7 +1,4 @@
 var config = require('config.json');
-var _ = require('lodash');
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
 var Q = require('q');
 var mongo = require('mongoskin');
 var db = mongo.db(config.connectionString, { native_parser: true });
@@ -14,15 +11,19 @@ service.get = get;
 service.create = create;
 service.delete = _delete;
 
+//tornando visível o service
 module.exports = service;
 
 
 function get() {
     var deferred = Q.defer();
 
-    db.questions.find(_id, function (err, quest) {
-        if (err) deferred.reject(err.name + ': ' + err.message);
-
+    db.questions.find().toArray(function (err, items) {
+        if (err) {
+            console.log(err);
+            deferred.reject(err.name + ': ' + err.message);
+        }
+        console.log(items);
             // user not found
             deferred.resolve();
         
@@ -32,12 +33,16 @@ function get() {
 }
 
 function create(quest) {
+    console.log(quest);
     var deferred = Q.defer();
 
     db.questions.insert(
         quest,
-        function (err, doc) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
+        function (err) {
+            if (err) {
+                console.log(err);
+                deferred.reject(err.name + ': ' + err.message);
+            }
 
             deferred.resolve();
         });
@@ -51,7 +56,10 @@ function _delete(_id) {
     db.questions.remove(
         { _id: mongo.helper.toObjectID(_id) },
         function (err) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
+            if (err)  {
+            console.log(err);
+            deferred.reject(err.name + ': ' + err.message);
+            }
 
             deferred.resolve();
         });
